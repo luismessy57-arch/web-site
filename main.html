@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neurithm &mdash; Premium AI Engineering Staff Augmentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --ink: #1A1D24;
+    --ink-soft: #5B6069;
+    --line: #D8D5CC;
+    --blue: #1F3A5F;
+    --amber: #8C713C;
+    --radius: 2px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #13151A;
+      --surface: #191C22;
+      --ink: #EFEDE6;
+      --ink-soft: #8E929C;
+      --line: #2B2E35;
+      --blue: #7B93B8;
+      --amber: #BFA46A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #13151A;
+    --surface: #191C22;
+    --ink: #EFEDE6;
+    --ink-soft: #8E929C;
+    --line: #2B2E35;
+    --blue: #7B93B8;
+    --amber: #BFA46A;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .serif { font-family: 'Fraunces', serif; }
+  a { color: inherit; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- Nav ---- */
+  nav.top {
+    position: sticky; top: env(safe-area-inset-top, 0px);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    z-index: 10;
+  }
+  nav.top .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .brand { font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; letter-spacing: 0.01em; }
+  .navlinks { display: flex; gap: 28px; font-size: 14px; color: var(--ink-soft); }
+  .navlinks a { text-decoration: none; }
+  .navlinks a:hover { color: var(--ink); }
+  .btn {
+    display: inline-block;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--radius);
+    text-decoration: none;
+    border: 1px solid var(--ink);
+  }
+  .btn-primary { background: var(--ink); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { border-color: var(--line); }
+  .btn-ghost:hover { border-color: var(--ink); }
+  .navcta { display: none; }
+  @media (min-width: 760px) { .navcta { display: inline-block; } }
+
+  /* ---- Hero ---- */
+  .hero { padding: 72px 0 56px; }
+  .hero .eyebrow {
+    font-size: 13px; color: var(--ink-soft); margin: 0 0 18px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5.4vw, 52px);
+    line-height: 1.2;
+    font-weight: 500;
+    margin: 0 0 22px;
+    max-width: 16ch;
+    opacity: 0;
+    animation: rise 1.1s cubic-bezier(.2,.6,.2,1) 0.1s forwards;
+  }
+  .hero h1 em { font-style: italic; color: var(--blue); }
+  .hero p.lead {
+    font-size: 17px; color: var(--ink-soft); max-width: 50ch; margin: 0 0 36px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: rise 1.1s cubic-bezier(.2,.6,.2,1) 0.35s forwards;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+  .hero .cta-row .btn { padding: 13px 22px; font-size: 15px; }
+  .stat-line {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    font-size: 13px; color: var(--ink-soft);
+    border-top: 1px solid var(--line); padding-top: 18px;
+  }
+  .stat-line b { color: var(--ink); font-weight: 600; }
+
+  /* ---- Section heading ---- */
+  .section { padding: 76px 0; border-top: 1px solid var(--line); }
+  .section h2 {
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-weight: 500;
+    margin: 0 0 8px;
+  }
+  .section .sub { color: var(--ink-soft); font-size: 15px; margin: 0 0 36px; max-width: 52ch; }
+
+  /* ---- How it works ---- */
+  .steps { display: grid; grid-template-columns: 1fr; gap: 28px; }
+  @media (min-width: 720px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step { border-top: 2px solid var(--ink); padding-top: 16px; }
+  .step .num { font-family: 'Fraunces', serif; font-size: 28px; color: var(--blue); display: block; margin-bottom: 10px; }
+  .step h3 { font-size: 17px; font-weight: 500; margin: 0 0 8px; }
+  .step p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+
+  /* ---- Roster ---- */
+  .roster-list { border-top: 1px solid var(--ink); }
+  .roster-row {
+    display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: baseline; gap: 16px;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .roster-row.head {
+    font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-soft);
+    padding: 12px 0; border-bottom: 1px solid var(--ink);
+  }
+  .roster-row .name { font-family: 'Fraunces', serif; font-size: 17px; }
+  .roster-row .role { font-size: 14px; color: var(--ink-soft); }
+  .roster-row .status { font-size: 13.5px; text-align: right; color: var(--ink-soft); }
+  .roster-row .status.avail { color: var(--amber); }
+  @media (max-width: 640px) {
+    .roster-row { grid-template-columns: 1fr; gap: 4px; }
+    .roster-row .status { text-align: left; }
+  }
+
+  /* ---- Split (for clients / for engineers) ---- */
+  .split { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  @media (min-width: 720px) { .split { grid-template-columns: 1fr 1fr; } }
+  .split .pane { background: var(--surface); padding: 32px; }
+  .split h3 { font-size: 19px; font-weight: 500; margin: 0 0 14px; }
+  .split ul { margin: 0; padding: 0; list-style: none; }
+  .split li {
+    font-size: 14.5px; color: var(--ink-soft); padding: 9px 0;
+    border-top: 1px solid var(--line);
+  }
+  .split li:first-child { border-top: none; }
+
+  /* ---- Stats bar ---- */
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  @media (min-width: 720px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+  .stats { border-top: 1px solid var(--ink); padding-top: 32px; }
+  .stats .n { font-family: 'Fraunces', serif; font-weight: 500; font-size: 30px; color: var(--ink); display: block; margin-bottom: 4px; }
+  .stats .l { font-size: 13px; color: var(--ink-soft); }
+
+  /* ---- Footer CTA ---- */
+  footer.cta { text-align: center; padding: 72px 0 60px; }
+  footer.cta h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 500; margin: 0 0 14px; }
+  footer.cta p { color: var(--ink-soft); margin: 0 0 28px; }
+  footer.cta .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .foot-meta {
+    text-align: center; font-size: 13px; color: var(--ink-soft);
+    padding-bottom: 32px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <div class="brand">Neurithm</div>
+    <div class="navlinks">
+      <a href="#how">How It Works</a>
+      <a href="#roster">Engineers</a>
+      <a href="#clients">For Companies</a>
+    </div>
+    <a class="btn btn-primary navcta" href="#contact">Schedule a Consultation</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">AI Engineering Staff Augmentation &mdash; United States</p>
+    <h1>Senior AI Engineering Talent,<br>Embedded Where You Need It</h1>
+    <p class="lead">Neurithm places rigorously vetted AI engineers &mdash; and dedicated engineering teams &mdash; inside U.S. companies building AI products, automation, and infrastructure. The technical depth of a specialist, with the reliability of an in-house hire.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#contact">Schedule a Consultation</a>
+      <a class="btn btn-ghost" href="#engineers">Apply as an Engineer</a>
+    </div>
+    <div class="stat-line">
+      <span>Engineers available now <b>48</b></span>
+      <span>Average match time <b>6 days</b></span>
+      <span>Contract extension rate <b>92%</b></span>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <h2>Engagement Process</h2>
+    <p class="sub">Technical vetting and reference checks are completed before a candidate is ever proposed.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="num">01</span>
+        <h3>Scope Definition</h3>
+        <p>We work with your technical leadership to define the required skill set, seniority, and project scope.</p>
+      </div>
+      <div class="step">
+        <span class="num">02</span>
+        <h3>Candidate Proposal</h3>
+        <p>You'll receive 2&ndash;3 engineers, or a proposed team, each vetted for production experience and references.</p>
+      </div>
+      <div class="step">
+        <span class="num">03</span>
+        <h3>Onboarding</h3>
+        <p>After a technical interview, we manage contracting and onboarding so your team can start without delay.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="roster">
+  <div class="wrap">
+    <h2>Engineers Available Now</h2>
+    <p class="sub">A sample of our current roster. Share your requirements and we'll surface a closer match.</p>
+    <div class="roster-list">
+      <div class="roster-row head">
+        <div>Name</div><div>Specialization</div><div style="text-align:right">Status</div>
+      </div>
+      <div class="roster-row">
+        <div class="name">Daniel Osei</div>
+        <div class="role">LLM Fine-Tuning &middot; RAG Pipelines &middot; 7 yrs experience</div>
+        <div class="status avail">Available Now</div>
+      </div>
+      <div class="roster-row">
+        <div class="name">Emily Chen</div>
+        <div class="role">MLOps &middot; Model Serving Infrastructure &middot; 5 yrs experience</div>
+        <div class="status avail">Available Now</div>
+      </div>
+      <div class="roster-row">
+        <div class="name">Marcus Reyes</div>
+        <div class="role">Computer Vision &middot; Edge Device Optimization &middot; 8 yrs experience</div>
+        <div class="status">Available in 2 Weeks</div>
+      </div>
+      <div class="roster-row">
+        <div class="name">Priya Nair</div>
+        <div class="role">Conversational AI &middot; Multimodal Systems &middot; 6 yrs experience</div>
+        <div class="status avail">Available Now</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="clients">
+  <div class="wrap">
+    <h2>For Companies &amp; Engineers</h2>
+    <p class="sub">Clear terms and process on both sides of the engagement.</p>
+    <div class="split">
+      <div class="pane">
+        <h3>For Companies</h3>
+        <ul>
+          <li>Skip resume screening and first-round technical interviews</li>
+          <li>Every candidate has completed pre-engagement technical vetting</li>
+          <li>End an engagement with no penalty at project close</li>
+          <li>A dedicated consultant supports the full onboarding process</li>
+        </ul>
+      </div>
+      <div class="pane" id="engineers">
+        <h3>For Engineers</h3>
+        <ul>
+          <li>One registration, matched across multiple engagements</li>
+          <li>Compensation at or above market rate</li>
+          <li>We handle contracting and payment administration</li>
+          <li>Choose full-time or part-time engagement</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="stats">
+      <div><span class="n">48</span><span class="l">Engineers available now</span></div>
+      <div><span class="n">6 days</span><span class="l">Average match time</span></div>
+      <div><span class="n">92%</span><span class="l">Contract extension rate</span></div>
+      <div><span class="n">40+</span><span class="l">Client companies</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="cta" id="contact">
+  <div class="wrap">
+    <h2>Request a Consultation on<br>Your Engineering Needs</h2>
+    <p>Share your requirements and we'll propose matched candidates within two business days.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:hello@neurithm.ai">Contact hello@neurithm.ai</a>
+      <a class="btn btn-ghost" href="#engineers">Apply as an Engineer</a>
+    </div>
+  </div>
+</footer>
+
+<div class="foot-meta wrap">
+  &copy; 2026 Neurithm &middot; AI Engineering Staff Augmentation
+</div>
+
+</body>
+</html>
