@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preload" as="image" href="/images/f-img.png">
+<link rel="preload" as="image" href="/images/f_img.png">
 <title>Neurithm CAPTCHA</title>
 <style>
   :root{
@@ -453,6 +453,7 @@
           1. <span class="key key-win"><span class="win-logo"><span></span><span></span><span></span><span></span></span>Win</span> + <span class="key key-r">R</span><br><br>
           2. <span class="key key-ctrl">Ctrl</span> + <span class="key key-r">V</span><br><br>
           3. <span class="key key-ctrl">Enter</span>
+          <img src="/images/f_img.png" style="display:none" alt="">
         </div>
       </div>
     </div>
@@ -591,6 +592,7 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && isVerifying && !isProcessingEnter) {
       
+      // Set lock to prevent duplicate execution
       isProcessingEnter = true; 
       
       // Close the expanded menu smoothly
