@@ -1,12 +1,11 @@
 {
   "headers": [
     {
-      "source": "/images/f_img.png",
+      "source": "/:path*.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=315360, immutable" },
         {
-          "key": "Content-Type",
-          "value": "image/png"
+          "key": "Cache-Control",
+          "value": "public, max-age=234232, immutable"
         }
       ]
     }
