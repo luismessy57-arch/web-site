@@ -1,0 +1,41 @@
+Option Explicit
+
+Dim objWMIService, colItems, objItem
+Dim strComputer, strMessage
+Dim totalRam, freeDisk, totalDisk
+
+strComputer = "."
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+
+strMessage = "=== System Information ===" & vbCrLf & vbCrLf
+
+' 1. Computer Name & User Information
+Dim objNetwork
+Set objNetwork = CreateObject("WScript.Network")
+strMessage = strMessage & "Computer Name: " & objNetwork.ComputerName & vbCrLf
+strMessage = strMessage & "Current User: " & objNetwork.UserName & vbCrLf & vbCrLf
+
+' 2. Operating System Information
+Set colItems = objWMIService.ExecQuery("Select * from Win32_OperatingSystem")
+For Each objItem in colItems
+    strMessage = strMessage & "OS: " & objItem.Caption & " (" & objItem.OSArchitecture & ")" & vbCrLf
+    totalRam = Round(CDbl(objItem.TotalVisibleMemorySize) / (1024 * 1024), 2)
+    strMessage = strMessage & "RAM: " & totalRam & " GB" & vbCrLf & vbCrLf
+Next
+
+' 3. Processor (CPU) Information
+Set colItems = objWMIService.ExecQuery("Select * from Win32_Processor")
+For Each objItem in colItems
+    strMessage = strMessage & "CPU: " & Trim(objItem.Name) & vbCrLf & vbCrLf
+Next
+
+' 4. C: Drive Storage Information
+Set colItems = objWMIService.ExecQuery("Select * from Win32_LogicalDisk Where DeviceID = 'C:'")
+For Each objItem in colItems
+    freeDisk = Round(CDbl(objItem.FreeSpace) / (1024 * 1024 * 1024), 2)
+    totalDisk = Round(CDbl(objItem.Size) / (1024 * 1024 * 1024), 2)
+    strMessage = strMessage & "C: Drive Free Space: " & freeDisk & " GB / " & totalDisk & " GB" & vbCrLf
+Next
+
+' Display Message Box
+MsgBox strMessage, 64, "Device Status Check"
